@@ -37,7 +37,7 @@ export default function Login() {
         {/* ロゴ */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-3">⚔️</div>
-          <h1 className="font-display text-4xl text-white tracking-wider">WORK QUEST</h1>
+          <h1 className="font-display text-4xl text-white tracking-wider">REGAL QUEST</h1>
           <p className="text-sm text-gray-500 mt-2 font-mono tracking-widest">by REGALCAST</p>
         </div>
 
