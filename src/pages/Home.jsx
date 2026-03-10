@@ -71,7 +71,7 @@ export default function Home() {
       <header className="sticky top-0 z-10 bg-white/85 backdrop-blur border-b border-gray-200
         px-7 py-3.5 flex items-center justify-between">
         <div>
-          <div className="font-mono text-[10px] text-gray-400 tracking-widest">WORK QUEST / TODAY</div>
+          <div className="font-mono text-[10px] text-gray-400 tracking-widest">REGAL QUEST / TODAY</div>
           <div className="font-display text-xl tracking-wide">マイクエスト ⚔</div>
         </div>
         <div className="flex items-center gap-3">
