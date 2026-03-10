@@ -4,7 +4,7 @@ import { getAuth } from 'firebase/auth'
 import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
-  apiKey:            "AIzaSyCTudVhwguTOl7U50Hfg5AiAZZylUnKumw",
+  apiKey:            "AIzaSyCTudVhwguTOl7U50Hfg5AiAZ2ylUnKumw",
   authDomain:        "work-quest-9dadb.firebaseapp.com",
   projectId:         "work-quest-9dadb",
   storageBucket:     "work-quest-9dadb.firebasestorage.app",
