@@ -48,7 +48,7 @@ export default function AppLayout({ children }) {
               {isManager ? '🏰' : '⚔'}
             </div>
             <div>
-              <div className="font-display text-white text-sm tracking-wide">WORK QUEST</div>
+              <div className="font-display text-white text-sm tracking-wide">REGAL QUEST</div>
               <div className="font-mono text-white/25 text-[9px] tracking-widest mt-0.5">
                 {isManager ? 'GUILD MASTER VIEW' : 'by REGALCAST'}
               </div>
