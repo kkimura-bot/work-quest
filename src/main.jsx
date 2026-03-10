@@ -7,6 +7,7 @@ import './styles/index.css'
 
 import Login   from './pages/Login'
 import Home    from './pages/Home'
+import Goals   from './pages/Goals'
 
 // 認証済みのみアクセス可能なルート
 function PrivateRoute({ children }) {
@@ -35,6 +36,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           {/* 認証済みルート */}
           <Route path="/home" element={
             <PrivateRoute><Home /></PrivateRoute>
+          } />
+          <Route path="/goals" element={
+            <PrivateRoute><Goals /></PrivateRoute>
           } />
 
           {/* Phase 2 以降に追加予定 */}
