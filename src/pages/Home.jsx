@@ -297,7 +297,7 @@ export default function Home() {
   )
 }
 
-function QuestCard
+function QuestCard({ quest, onUpdateStatus }) {
   const st = STATUS_LABELS[quest.status] ?? STATUS_LABELS.todo
 
   return (
