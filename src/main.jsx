@@ -9,6 +9,7 @@ import Login   from './pages/Login'
 import Home    from './pages/Home'
 import Goals   from './pages/Goals'
 import History from './pages/History'
+import Status  from './pages/Status'
 
 // 認証済みのみアクセス可能なルート
 function PrivateRoute({ children }) {
@@ -43,6 +44,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           } />
           <Route path="/history" element={
             <PrivateRoute><History /></PrivateRoute>
+          } />
+          <Route path="/status" element={
+            <PrivateRoute><Status /></PrivateRoute>
           } />
 
           {/* Phase 2 以降に追加予定 */}
