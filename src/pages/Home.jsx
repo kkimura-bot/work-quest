@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useEffect, useState } from 'react'
 import { collection, query, where, orderBy, onSnapshot,
-  addDoc, updateDoc, doc, serverTimestamp, increment, Timestamp } from 'firebase/firestore'
+  addDoc, updateDoc, deleteDoc, doc, serverTimestamp, increment, Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../hooks/useAuth'
 import { levelProgress, getTitle, DIFFICULTY_XP } from '../lib/xp'
@@ -55,6 +55,32 @@ export default function Home() {
   }
 
   const [toast, setToast] = useState(null)
+  const [weekXp, setWeekXp]  = useState(0)
+
+  // 今週のXPをリアルタイム購読
+  useEffect(() => {
+    if (!user) return
+    const now = new Date()
+    const day = now.getDay() // 0=日
+    const diff = day === 0 ? 6 : day - 1 // 月曜起点
+    const monday = new Date(now)
+    monday.setDate(now.getDate() - diff)
+    monday.setHours(0, 0, 0, 0)
+    const nextMonday = new Date(monday)
+    nextMonday.setDate(monday.getDate() + 7)
+
+    const q = query(
+      collection(db, 'quests'),
+      where('userId', '==', user.uid),
+      where('status', '==', 'done'),
+      where('completedAt', '>=', Timestamp.fromDate(monday)),
+      where('completedAt', '<',  Timestamp.fromDate(nextMonday)),
+    )
+    return onSnapshot(q, snap => {
+      const total = snap.docs.reduce((sum, d) => sum + (d.data().xp ?? 0), 0)
+      setWeekXp(total)
+    })
+  }, [user])
 
   // ステータス更新 + XP自動加算
   const updateStatus = async (id, status) => {
@@ -80,6 +106,18 @@ export default function Home() {
         xp: increment(-(quest.xp ?? 0))
       })
     }
+  }
+
+  // クエスト削除
+  const deleteQuest = async (id) => {
+    const quest = quests.find(q => q.id === id)
+    if (!quest) return
+    if (!window.confirm(`「${quest.title}」を削除しますか？`)) return
+    // クリア済みならXPも戻す
+    if (quest.status === 'done') {
+      await updateDoc(doc(db, 'users', user.uid), { xp: increment(-(quest.xp ?? 0)) })
+    }
+    await deleteDoc(doc(db, 'quests', id))
   }
 
   const doneCount  = quests.filter(q => q.status === 'done').length
@@ -139,7 +177,7 @@ export default function Home() {
                 {[
                   { val: totalCount, label: 'TODAY' },
                   { val: doneCount,  label: 'DONE',  green: true },
-                  { val: user?.xp ?? 0, label: 'WEEK XP', orange: true },
+                  { val: weekXp, label: 'WEEK XP', orange: true },
                 ].map((s, i) => (
                   <div key={i} className={`flex-1 py-3 text-center ${i < 2 ? 'border-r border-white/8' : ''}`}>
                     <div className={`font-display text-2xl ${s.green ? 'text-green-400' : s.orange ? 'text-orange-400' : 'text-white'}`}>
@@ -210,7 +248,7 @@ export default function Home() {
           ) : (
             <div className="flex flex-col gap-2.5">
               {quests.map(quest => (
-                <QuestCard key={quest.id} quest={quest} onUpdateStatus={updateStatus} />
+                <QuestCard key={quest.id} quest={quest} onUpdateStatus={updateStatus} onDelete={deleteQuest} />
               ))}
             </div>
           )}
@@ -298,7 +336,7 @@ export default function Home() {
   )
 }
 
-function QuestCard({ quest, onUpdateStatus }) {
+function QuestCard({ quest, onUpdateStatus, onDelete }) {
   const st = STATUS_LABELS[quest.status] ?? STATUS_LABELS.todo
 
   return (
@@ -347,8 +385,14 @@ function QuestCard({ quest, onUpdateStatus }) {
         </div>
       </div>
 
-      {/* XP */}
+      {/* XP + 削除 */}
       <div className="flex flex-col items-end gap-1 flex-shrink-0">
+        <button
+          onClick={() => onDelete(quest.id)}
+          className="text-gray-300 hover:text-red-400 transition-colors text-xs px-1"
+          title="削除">
+          🗑
+        </button>
         <div className={`font-display text-sm px-2 py-0.5 rounded
           ${quest.status === 'done' ? 'text-gray-400 bg-gray-100' : 'text-orange-500 bg-orange-50'}`}>
           +{quest.xp} XP
