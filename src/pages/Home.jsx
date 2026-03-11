@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useEffect, useState } from 'react'
 import { collection, query, where, orderBy, onSnapshot,
-  addDoc, updateDoc, doc, serverTimestamp, increment } from 'firebase/firestore'
+  addDoc, updateDoc, doc, serverTimestamp, increment, Timestamp } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../hooks/useAuth'
 import { levelProgress, getTitle, DIFFICULTY_XP } from '../lib/xp'
@@ -24,14 +24,15 @@ export default function Home() {
   // 今日のクエストをリアルタイム購読
   useEffect(() => {
     if (!user) return
-    const start = new Date(today)
+    const start = Timestamp.fromDate(new Date(today))
     const end   = new Date(today); end.setDate(end.getDate() + 1)
+    const endTs = Timestamp.fromDate(end)
 
     const q = query(
       collection(db, 'quests'),
       where('userId', '==', user.uid),
       where('createdAt', '>=', start),
-      where('createdAt', '<', end),
+      where('createdAt', '<', endTs),
       orderBy('createdAt', 'desc')
     )
     return onSnapshot(q, snap =>
