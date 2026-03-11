@@ -1,7 +1,7 @@
 // src/pages/Home.jsx
 import { useEffect, useState } from 'react'
 import { collection, query, where, orderBy, onSnapshot,
-  addDoc, updateDoc, doc, serverTimestamp } from 'firebase/firestore'
+  addDoc, updateDoc, doc, serverTimestamp, increment } from 'firebase/firestore'
 import { db } from '../lib/firebase'
 import { useAuth } from '../hooks/useAuth'
 import { levelProgress, getTitle, DIFFICULTY_XP } from '../lib/xp'
@@ -53,11 +53,32 @@ export default function Home() {
     setShowForm(false)
   }
 
-  // ステータス更新
+  const [toast, setToast] = useState(null)
+
+  // ステータス更新 + XP自動加算
   const updateStatus = async (id, status) => {
+    const quest = quests.find(q => q.id === id)
+    if (!quest) return
+
     const upd = { status }
     if (status === 'done') upd.completedAt = serverTimestamp()
+
     await updateDoc(doc(db, 'quests', id), upd)
+
+    const wasDown = quest.status === 'done'
+    const goingDone = status === 'done'
+    if (!wasDown && goingDone) {
+      await updateDoc(doc(db, 'users', user.uid), {
+        xp: increment(quest.xp ?? 0)
+      })
+      // トースト通知
+      setToast(`+${quest.xp} XP 獲得！ 🎉`)
+      setTimeout(() => setToast(null), 2500)
+    } else if (wasDown && !goingDone) {
+      await updateDoc(doc(db, 'users', user.uid), {
+        xp: increment(-(quest.xp ?? 0))
+      })
+    }
   }
 
   const doneCount  = quests.filter(q => q.status === 'done').length
@@ -263,11 +284,20 @@ export default function Home() {
           </form>
         </div>
       )}
+      {/* XPトースト通知 */}
+      {toast && (
+        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50
+          px-6 py-3 rounded-2xl text-white font-display text-lg tracking-wide shadow-2xl"
+          style={{ background: 'linear-gradient(135deg,#ff6b6b,#ff9500)',
+            boxShadow: '0 8px 32px rgba(255,107,107,0.5)' }}>
+          {toast}
+        </div>
+      )}
     </AppLayout>
   )
 }
 
-function QuestCard({ quest, onUpdateStatus }) {
+function QuestCard
   const st = STATUS_LABELS[quest.status] ?? STATUS_LABELS.todo
 
   return (
