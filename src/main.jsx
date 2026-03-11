@@ -11,6 +11,8 @@ import Goals   from './pages/Goals'
 import History from './pages/History'
 import Status  from './pages/Status'
 import Guild   from './pages/Guild'
+import Members from './pages/Members'
+import Report  from './pages/Report'
 
 // 認証済みのみアクセス可能なルート
 function PrivateRoute({ children }) {
@@ -51,6 +53,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           } />
           <Route path="/guild" element={
             <PrivateRoute><Guild /></PrivateRoute>
+          } />
+          <Route path="/members" element={
+            <PrivateRoute><Members /></PrivateRoute>
+          } />
+          <Route path="/report" element={
+            <PrivateRoute><Report /></PrivateRoute>
           } />
 
           {/* Phase 2 以降に追加予定 */}
