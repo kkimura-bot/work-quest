@@ -15,6 +15,7 @@ import Members     from './pages/Members'
 import Report      from './pages/Report'
 import DailyReport from './pages/DailyReport'
 import Ranking     from './pages/Ranking'
+import Feedback    from './pages/Feedback'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -43,6 +44,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
           <Route path="/report"      element={<PrivateRoute><Report /></PrivateRoute>} />
           <Route path="/daily-report" element={<PrivateRoute><DailyReport /></PrivateRoute>} />
           <Route path="/ranking"     element={<PrivateRoute><Ranking /></PrivateRoute>} />
+          <Route path="/feedback"    element={<PrivateRoute><Feedback /></PrivateRoute>} />
           <Route path="*" element={<Navigate to="/home" replace />} />
         </Routes>
       </AuthProvider>
