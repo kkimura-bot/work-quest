@@ -7,6 +7,7 @@ const NAV_COMMON = [
   { to: '/daily-report', icon: '📋', label: '日報' },
   { to: '/ranking',      icon: '🏆', label: 'ランキング' },
   { to: '/feedback',     icon: '💬', label: 'フィードバック' },
+  { to: '/mission',      icon: '⚔️', label: 'チームミッション' },
 ]
 
 const NAV_EMPLOYEE = [
