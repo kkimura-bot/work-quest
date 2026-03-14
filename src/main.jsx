@@ -2,7 +2,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import { AuthProvider, useAuth } from './hooks/useAuth'
+import { AuthProvider, useAuth, isSuperAdmin } from './hooks/useAuth'
 import './styles/index.css'
 
 import Login       from './pages/Login'
@@ -17,6 +17,7 @@ import DailyReport from './pages/DailyReport'
 import Ranking     from './pages/Ranking'
 import Feedback    from './pages/Feedback'
 import Mission     from './pages/Mission'
+import Admin       from './pages/Admin'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -30,24 +31,33 @@ function PublicRoute({ children }) {
   return !user ? children : <Navigate to="/home" replace />
 }
 
+function AdminRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return null
+  if (!user) return <Navigate to="/login" replace />
+  if (!isSuperAdmin(user)) return <Navigate to="/home" replace />
+  return children
+}
+
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <Routes>
-          <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/home"        element={<PrivateRoute><Home /></PrivateRoute>} />
-          <Route path="/goals"       element={<PrivateRoute><Goals /></PrivateRoute>} />
-          <Route path="/history"     element={<PrivateRoute><History /></PrivateRoute>} />
-          <Route path="/status"      element={<PrivateRoute><Status /></PrivateRoute>} />
-          <Route path="/guild"       element={<PrivateRoute><Guild /></PrivateRoute>} />
-          <Route path="/members"     element={<PrivateRoute><Members /></PrivateRoute>} />
-          <Route path="/report"      element={<PrivateRoute><Report /></PrivateRoute>} />
+          <Route path="/login"        element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/home"         element={<PrivateRoute><Home /></PrivateRoute>} />
+          <Route path="/goals"        element={<PrivateRoute><Goals /></PrivateRoute>} />
+          <Route path="/history"      element={<PrivateRoute><History /></PrivateRoute>} />
+          <Route path="/status"       element={<PrivateRoute><Status /></PrivateRoute>} />
+          <Route path="/guild"        element={<PrivateRoute><Guild /></PrivateRoute>} />
+          <Route path="/members"      element={<PrivateRoute><Members /></PrivateRoute>} />
+          <Route path="/report"       element={<PrivateRoute><Report /></PrivateRoute>} />
           <Route path="/daily-report" element={<PrivateRoute><DailyReport /></PrivateRoute>} />
-          <Route path="/ranking"     element={<PrivateRoute><Ranking /></PrivateRoute>} />
-          <Route path="/feedback"    element={<PrivateRoute><Feedback /></PrivateRoute>} />
-          <Route path="/mission"     element={<PrivateRoute><Mission /></PrivateRoute>} />
-          <Route path="*" element={<Navigate to="/home" replace />} />
+          <Route path="/ranking"      element={<PrivateRoute><Ranking /></PrivateRoute>} />
+          <Route path="/feedback"     element={<PrivateRoute><Feedback /></PrivateRoute>} />
+          <Route path="/mission"      element={<PrivateRoute><Mission /></PrivateRoute>} />
+          <Route path="/admin"        element={<AdminRoute><Admin /></AdminRoute>} />
+          <Route path="*"             element={<Navigate to="/home" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>
