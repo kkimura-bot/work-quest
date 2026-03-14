@@ -48,7 +48,7 @@ function getDateOptions() {
 
 export default function Home() {
   const { user }             = useAuth()
-  const [quests, setQuests]  = useState([])\
+  const [quests, setQuests]  = useState([])
   const [showForm, setShowForm] = useState(false)
   const [editTarget, setEditTarget] = useState(null) // 編集対象クエスト
   const [form, setForm]      = useState({
