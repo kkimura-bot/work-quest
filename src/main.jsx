@@ -18,6 +18,7 @@ import Ranking     from './pages/Ranking'
 import Feedback    from './pages/Feedback'
 import Mission     from './pages/Mission'
 import Admin       from './pages/Admin'
+import Register    from './pages/Register'
 
 function PrivateRoute({ children }) {
   const { user, loading } = useAuth()
@@ -45,6 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <Routes>
           <Route path="/login"        element={<PublicRoute><Login /></PublicRoute>} />
+          <Route path="/register"     element={<PublicRoute><Register /></PublicRoute>} />
           <Route path="/home"         element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/goals"        element={<PrivateRoute><Goals /></PrivateRoute>} />
           <Route path="/history"      element={<PrivateRoute><History /></PrivateRoute>} />
