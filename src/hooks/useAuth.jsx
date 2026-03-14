@@ -7,13 +7,12 @@ import { auth, db } from '../lib/firebase'
 const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
-  const [user, setUser]       = useState(null)   // Firestore上のユーザーデータ
+  const [user, setUser]       = useState(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (firebaseUser) {
-        // Firestoreからユーザー情報を取得
         const snap = await getDoc(doc(db, 'users', firebaseUser.uid))
         setUser(snap.exists() ? { uid: firebaseUser.uid, ...snap.data() } : null)
       } else {
@@ -24,10 +23,7 @@ export function AuthProvider({ children }) {
     return unsubscribe
   }, [])
 
-  /** メール＋パスワードでログイン */
-  const login = (email, password) => signInWithEmailAndPassword(auth, email, password)
-
-  /** ログアウト */
+  const login  = (email, password) => signInWithEmailAndPassword(auth, email, password)
   const logout = () => signOut(auth)
 
   return (
@@ -37,9 +33,13 @@ export function AuthProvider({ children }) {
   )
 }
 
-/** useAuth フック */
 export function useAuth() {
   const ctx = useContext(AuthContext)
   if (!ctx) throw new Error('useAuth must be used within AuthProvider')
   return ctx
 }
+
+/** ロール判定ヘルパー */
+export function isSuperAdmin(user) { return user?.role === 'super_admin' }
+export function isManager(user)    { return user?.role === 'manager' || user?.role === 'super_admin' }
+export function isLeader(user)     { return user?.role === 'leader' || isManager(user) }
