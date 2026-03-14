@@ -6,6 +6,7 @@ import { levelProgress, getTitle } from '../../lib/xp'
 const NAV_COMMON = [
   { to: '/daily-report', icon: '📋', label: '日報' },
   { to: '/ranking',      icon: '🏆', label: 'ランキング' },
+  { to: '/feedback',     icon: '💬', label: 'フィードバック' },
 ]
 
 const NAV_EMPLOYEE = [
