@@ -3,23 +3,30 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { levelProgress, getTitle } from '../../lib/xp'
 
+const NAV_COMMON = [
+  { to: '/daily-report', icon: '📋', label: '日報' },
+  { to: '/ranking',      icon: '🏆', label: 'ランキング' },
+]
+
 const NAV_EMPLOYEE = [
   { to: '/home',    icon: '⚔️', label: 'マイクエスト' },
   { to: '/goals',   icon: '🎯', label: '週次目標' },
   { to: '/history', icon: '📜', label: '実績ログ' },
   { to: '/status',  icon: '💎', label: 'マイステータス' },
+  ...NAV_COMMON,
 ]
 
 const NAV_MANAGER = [
   { to: '/guild',   icon: '🏰', label: 'ギルドダッシュボード' },
   { to: '/members', icon: '👥', label: 'メンバー一覧' },
   { to: '/report',  icon: '📊', label: '週次レポート' },
+  ...NAV_COMMON,
 ]
 
 export default function AppLayout({ children }) {
   const { user, logout } = useAuth()
   const navigate          = useNavigate()
-  const isManager         = user?.role === 'manager'
+  const isManager         = user?.role === 'manager' || user?.role === 'leader'
   const navItems          = isManager ? NAV_MANAGER : NAV_EMPLOYEE
   const { level, progress, remaining } = levelProgress(user?.xp ?? 0)
   const title             = getTitle(level)
@@ -79,7 +86,6 @@ export default function AppLayout({ children }) {
               Lv.{level}
             </div>
           </div>
-          {/* XPバー */}
           {!isManager && (
             <>
               <div className="flex justify-between text-[9px] font-mono text-white/25 mb-1">
