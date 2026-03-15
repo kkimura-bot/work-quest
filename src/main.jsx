@@ -46,7 +46,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <Routes>
           <Route path="/login"        element={<PublicRoute><Login /></PublicRoute>} />
-          <Route path="/register"     element={<PublicRoute><Register /></PublicRoute>} />
+          <Route path="/register"     element={<Register />} />
           <Route path="/home"         element={<PrivateRoute><Home /></PrivateRoute>} />
           <Route path="/goals"        element={<PrivateRoute><Goals /></PrivateRoute>} />
           <Route path="/history"      element={<PrivateRoute><History /></PrivateRoute>} />
