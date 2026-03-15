@@ -2,58 +2,56 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-    // ユーザー情報
     match /users/{userId} {
       allow read: if request.auth != null;
       allow write: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'manager';
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'super_admin'];
     }
 
-    // クエスト
     match /quests/{questId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if request.auth != null && (
         resource.data.userId == request.auth.uid ||
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'leader']
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'leader', 'super_admin']
       );
     }
 
-    // 日報
     match /dailyReports/{reportId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update: if request.auth != null && (
         resource.data.userId == request.auth.uid ||
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'leader']
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'leader', 'super_admin']
       );
     }
 
-    // フィードバック
     match /feedback/{feedbackId} {
       allow read: if request.auth != null;
       allow create: if request.auth != null && request.resource.data.fromUserId == request.auth.uid;
-      allow update, delete: if false;
     }
 
-    // チームミッション
     match /missions/{missionId} {
       allow read: if request.auth != null;
-      allow create, update: if request.auth != null &&
-        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager'];
-      allow update: if request.auth != null; // 参加登録はメンバーも可
+      allow create, update, delete: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role in ['manager', 'super_admin'];
     }
 
-    // 通知
     match /notifications/{notifId} {
       allow read: if request.auth != null && resource.data.toUserId == request.auth.uid;
       allow create: if request.auth != null;
       allow update: if request.auth != null && resource.data.toUserId == request.auth.uid;
-      allow delete: if false;
     }
 
-    // 週次目標
+    // 招待コレクション — super_adminが作成可能・誰でも読める（登録時に必要）
+    match /invites/{inviteId} {
+      allow read: if true;
+      allow create: if request.auth != null &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'super_admin';
+      allow delete: if request.auth != null;
+    }
+
     match /weeklyGoals/{goalId} {
       allow read, write: if request.auth != null && resource.data.userId == request.auth.uid;
       allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
