@@ -43,7 +43,9 @@ export default function Admin() {
   const createInviteWithCode = async (e) => {
     e.preventDefault()
     const code = generateCode()
-    await addDoc(collection(db, 'invites'), {
+    // コードをドキュメントIDとして保存（Register.jsxと一致させる）
+    const { setDoc, doc: fsDoc } = await import('firebase/firestore')
+    await setDoc(fsDoc(db, 'invites', code), {
       code,
       email:     inviteForm.email,
       role:      inviteForm.role,
