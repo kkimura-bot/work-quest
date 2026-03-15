@@ -90,7 +90,7 @@ export default function DailyReport() {
     setComment(c => ({ ...c, [reportId]: '' }))
   }
 
-  const isManager = user?.role === 'manager' || user?.role === 'leader'
+  const isManager = user?.role === 'manager' || user?.role === 'leader' || user?.role === 'super_admin'
   const displayReports = viewMode === 'mine' ? reports : allReports
 
   return (
