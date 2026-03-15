@@ -199,7 +199,7 @@ export default function Login() {
         )}
 
         <p className="text-center text-xs text-gray-600 mt-4">
-          アカウントはマネージャーから共有されます
+          アカウントは管理者からの招待リンクで登録できます
         </p>
       </div>
     </div>
