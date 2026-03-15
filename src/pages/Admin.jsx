@@ -40,23 +40,6 @@ export default function Admin() {
   }, [])
 
   // 招待リンク生成
-  const createInvite = async (e) => {
-    e.preventDefault()
-    const code = generateCode()
-    await addDoc(collection(db, 'invites'), {
-      code,
-      email:     inviteForm.email,
-      role:      inviteForm.role,
-      createdBy: user.uid,
-      createdAt: serverTimestamp(),
-      used:      false,
-    })
-    // ドキュメントIDではなくcodeでリンクを生成
-    const link = `${BASE_URL}/register?code=${code}`
-    setInviteLink(link)
-  }
-
-  // 招待リンクをFirestoreに保存する際、codeをドキュメントIDにする
   const createInviteWithCode = async (e) => {
     e.preventDefault()
     const code = generateCode()
