@@ -32,7 +32,7 @@ export default function Mission() {
     endDate: '',
   })
   const [submitting, setSubmitting] = useState(false)
-  const isManager = user?.role === 'manager'
+  const isManager = user?.role === 'manager' || user?.role === 'super_admin'
 
   // ミッション一覧を購読
   useEffect(() => {
