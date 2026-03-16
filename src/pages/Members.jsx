@@ -42,7 +42,7 @@ export default function Members() {
 
   return (
     <AppLayout>
-      <header className="sticky top-0 z-10 bg-white/85 backdrop-blur border-b border-gray-200
+      <header className="sticky top-0 md:top-0 z-10 bg-white/85 backdrop-blur border-b border-gray-200
         px-7 py-3.5 flex items-center justify-between">
         <div>
           <div className="font-mono text-[10px] text-gray-400 tracking-widest">REGAL QUEST / GUILD</div>
