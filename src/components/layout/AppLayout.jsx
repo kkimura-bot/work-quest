@@ -212,7 +212,7 @@ export default function AppLayout({ children }) {
         </div>
       )}
 
-      <div className="flex-1 flex flex-col min-h-screen overflow-auto mt-14 md:mt-0">
+      <div className="flex-1 flex flex-col min-h-screen overflow-auto mt-14 md:mt-0 pb-16 md:pb-0">
         {children}
       </div>
 
