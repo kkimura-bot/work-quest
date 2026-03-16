@@ -182,27 +182,27 @@ export default function Home() {
   return (
     <AppLayout>
       {/* トップバー */}
-      <header className="sticky top-0 z-10 bg-white/85 backdrop-blur border-b border-gray-200
-        px-7 py-3.5 flex items-center justify-between">
+      <header className="sticky top-0 md:top-0 z-10 bg-white/85 backdrop-blur border-b border-gray-200
+        px-4 md:px-7 py-3 md:py-3.5 flex items-center justify-between">
         <div>
-          <div className="font-mono text-[10px] text-gray-400 tracking-widest">REGAL QUEST / TODAY</div>
-          <div className="font-display text-xl tracking-wide">マイクエスト ⚔</div>
+          <div className="font-mono text-[10px] text-gray-400 tracking-widest hidden md:block">REGAL QUEST / TODAY</div>
+          <div className="font-display text-lg md:text-xl tracking-wide">マイクエスト ⚔</div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           {/* 日付セレクター */}
           <select value={selectedDate} onChange={e => setSelectedDate(e.target.value)}
-            className="font-mono text-xs text-gray-500 bg-gray-100 px-3 py-1.5 rounded-full border-none outline-none cursor-pointer">
+            className="font-mono text-xs text-gray-500 bg-gray-100 px-2 py-1.5 rounded-full border-none outline-none cursor-pointer max-w-[120px] md:max-w-none">
             {getDateOptions().map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
           </select>
           <button onClick={() => { setShowForm(true); setForm(f => ({ ...f, questDate: selectedDate })) }}
-            className="flex items-center gap-1.5 text-white text-sm font-bold px-4 py-2 rounded-xl transition-all"
+            className="flex items-center gap-1 text-white text-sm font-bold px-3 md:px-4 py-2 rounded-xl transition-all whitespace-nowrap"
             style={{ background: 'linear-gradient(135deg,#ff6b6b,#ff9500)', boxShadow: '0 4px 16px rgba(255,107,107,0.35)' }}>
-            ＋ クエスト追加
+            ＋ <span className="hidden md:inline">クエスト</span>追加
           </button>
         </div>
       </header>
 
-      <main className="p-7 flex flex-col gap-6">
+      <main className="p-4 md:p-7 flex flex-col gap-4 md:gap-6 pb-20 md:pb-6">
         {/* ヒーローカード */}
         <div className="rounded-2xl p-7 text-white relative overflow-hidden"
           style={{ background: '#1a1a2e', boxShadow: '0 8px 40px rgba(0,0,0,0.15)' }}>
@@ -214,7 +214,7 @@ export default function Home() {
               <div className="font-display text-3xl tracking-wide mb-2">
                 {user?.name?.split(' ')[0]}{' '}
                 <span style={{ WebkitTextFillColor:'transparent', background:'linear-gradient(135deg,#ff6b6b,#ff9500)', WebkitBackgroundClip:'text' }}>
-                  {user?.name?.split(' ')[1] || user?.name}
+                  {user?.name?.split(' ').slice(1).join(' ')}
                 </span>
               </div>
               <div className="inline-flex items-center gap-1.5 text-xs font-bold px-3 py-1.5 rounded-md"
